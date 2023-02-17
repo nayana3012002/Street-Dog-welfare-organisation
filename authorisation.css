@@ -1,0 +1,73 @@
+User Login:
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+namespace WebApplication5
+{
+    public partial class userlogin : System.Web.UI.Page
+  {
+         string strcon = ConfigurationManager.ConnectionStrings["con"].ConnectionString;
+         protected void Page_Load(object sender, EventArgs e)
+       {
+        }
+protected void Button1_Click(object sender, EventArgs e)
+          {
+             try
+                {
+                  SqlConnection con = new SqlConnection(strcon);
+                  if (con.State == ConnectionState.Closed)
+                    {
+                       con.Open();
+                     }
+                  SqlCommand cmd = new SqlCommand("select * from dogtb where member_id='" 
+                  TextBox1.Text.Trim() + "' AND password='" + TextBox2.Text.Trim() + "'", con);
+                  SqlDataReader dr = cmd.ExecuteReader();
+                  if (dr.HasRows)
+
+
+
+
+
+
+{
+    while (dr.Read())
+   {
+           string message = " Login Successfull🙌";
+           string url = "signup.aspx";
+           string script = "window.onload = function(){ alert('";
+           script += message;
+           script += "');";
+           script += "window.location = '";
+           script += url;
+           script += "'; }";
+           ClientScript.RegisterStartupScript(this.GetType(), "Redirect", script, true);
+           Session["full_name"] = dr["full_name"]+"";
+           Session["dob"] = dr["dob"];
+           Session["contact_no"] = dr["contact_no"];
+           Session["email"] = dr["email"];
+           Session["state"] = dr["state"];
+           Session["city"] = dr["city"];
+           Session["pincode"] = dr["pincode"];
+           Session["full_address"] = dr["full_address"];
+           Session["member_id"] = dr["member_id"];
+           Session["password"] = dr["password"];
+  }
+ Response.Redirect("userwork.aspx");
+}
+else
+   {
+          Label1.Text = "Wrong password retry!";
+    }
+}
+catch (Exception ex)
+      {
+             }
+   }
+   }
+}
